@@ -1,0 +1,8 @@
+/build
+
+/.aptos
+
+/.idea
+/.vscode
+
+Move.lock

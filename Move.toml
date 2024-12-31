@@ -1,0 +1,9 @@
+[package]
+name = "kanari"
+
+
+[dependencies]
+Mgo = { git = "https://github.com/MangoNet-Labs/Mango.git", subdir = "crates/mgo-framework/packages/mgo-framework", rev = "testnet" }
+
+[addresses]
+kanari = "0x0"
