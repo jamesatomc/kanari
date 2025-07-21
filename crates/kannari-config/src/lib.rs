@@ -142,9 +142,6 @@ pub static R_OPT_NET_HELP: &str = r#"Chain Network
         #[clap(long)]
         pub proposer_account: Option<String>,
 
-        #[clap(long, default_value_t)]
-        pub da: DAConfig,
-
         #[clap(flatten)]
         pub proposer: ProposerConfig,
 
@@ -201,7 +198,6 @@ pub static R_OPT_NET_HELP: &str = r#"Chain Network
                 btc_reorg_aware_height: None,
                 sequencer_account: None,
                 proposer_account: None,
-                da: DAConfig::default(),
                 proposer: ProposerConfig::default(),
                 service_status: ServiceStatus::default(),
                 traffic_per_second: None,
@@ -233,9 +229,7 @@ pub static R_OPT_NET_HELP: &str = r#"Chain Network
                 let base = BaseConfig::load_with_opt(self)?;
                 let arc_base = Arc::new(base);
                 self.store.init(Arc::clone(&arc_base))?;
-                self.da.init(Arc::clone(&arc_base))?;
                 self.base = Some(arc_base);
-                self.init_btc_reorg_aware_block_store_dir()?;
             }
             Ok(())
         }
@@ -248,42 +242,42 @@ pub static R_OPT_NET_HELP: &str = r#"Chain Network
                 })
         }
 
-        pub fn init_btc_reorg_aware_block_store_dir(&mut self) -> Result<()> {
-            if self.btc_reorg_aware_block_store_dir.is_none() {
-                self.btc_reorg_aware_block_store_dir = Some(
-                    self.base()
-                        .data_dir()
-                        .join(DEFAULT_BTC_REORG_AWARE_BLOCK_STORE_DIR),
-                );
-            }
-            let store_dir = self.btc_reorg_aware_block_store_dir.as_ref().unwrap();
-            if !store_dir.exists() {
-                create_dir_all(store_dir.clone())?;
-            }
-            Ok(())
-        }
+        // pub fn init_btc_reorg_aware_block_store_dir(&mut self) -> Result<()> {
+        //     if self.btc_reorg_aware_block_store_dir.is_none() {
+        //         self.btc_reorg_aware_block_store_dir = Some(
+        //             self.base()
+        //                 .data_dir()
+        //                 .join(DEFAULT_BTC_REORG_AWARE_BLOCK_STORE_DIR),
+        //         );
+        //     }
+        //     let store_dir = self.btc_reorg_aware_block_store_dir.as_ref().unwrap();
+        //     if !store_dir.exists() {
+        //         create_dir_all(store_dir.clone())?;
+        //     }
+        //     Ok(())
+        // }
 
-        pub fn bitcoin_relayer_config(&self) -> Option<BitcoinRelayerConfig> {
-            self.btc_rpc_url.as_ref()?;
-            Some(BitcoinRelayerConfig {
-                btc_rpc_url: self.btc_rpc_url.clone().unwrap(),
-                btc_rpc_user_name: self.btc_rpc_username.clone().unwrap(),
-                btc_rpc_password: self.btc_rpc_password.clone().unwrap(),
-                btc_end_block_height: self.btc_end_block_height,
-                btc_sync_block_interval: self.btc_sync_block_interval,
-                btc_reorg_aware_block_store_dir: self
-                    .btc_reorg_aware_block_store_dir
-                    .clone()
-                    .unwrap_or_else(|| {
-                        self.base()
-                            .data_dir()
-                            .join(DEFAULT_BTC_REORG_AWARE_BLOCK_STORE_DIR)
-                    }),
-                btc_reorg_aware_height: self
-                    .btc_reorg_aware_height
-                    .unwrap_or(DEFAULT_BTC_REORG_AWARE_HEIGHT),
-            })
-        }
+        // pub fn bitcoin_relayer_config(&self) -> Option<BitcoinRelayerConfig> {
+        //     self.btc_rpc_url.as_ref()?;
+        //     Some(BitcoinRelayerConfig {
+        //         btc_rpc_url: self.btc_rpc_url.clone().unwrap(),
+        //         btc_rpc_user_name: self.btc_rpc_username.clone().unwrap(),
+        //         btc_rpc_password: self.btc_rpc_password.clone().unwrap(),
+        //         btc_end_block_height: self.btc_end_block_height,
+        //         btc_sync_block_interval: self.btc_sync_block_interval,
+        //         btc_reorg_aware_block_store_dir: self
+        //             .btc_reorg_aware_block_store_dir
+        //             .clone()
+        //             .unwrap_or_else(|| {
+        //                 self.base()
+        //                     .data_dir()
+        //                     .join(DEFAULT_BTC_REORG_AWARE_BLOCK_STORE_DIR)
+        //             }),
+        //         btc_reorg_aware_height: self
+        //             .btc_reorg_aware_height
+        //             .unwrap_or(DEFAULT_BTC_REORG_AWARE_HEIGHT),
+        //     })
+        // }
 
         pub fn port(&self) -> u16 {
             self.port.unwrap_or(6767)
@@ -328,9 +322,9 @@ pub static R_OPT_NET_HELP: &str = r#"Chain Network
             self.base.as_ref().expect("Config should init.")
         }
 
-        pub fn da_config(&self) -> &DAConfig {
-            &self.da
-        }
+        // pub fn da_config(&self) -> &DAConfig {
+        //     &self.da
+        // }
     }
 
     #[derive(Debug, Clone)]
