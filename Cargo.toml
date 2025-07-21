@@ -4,11 +4,12 @@ resolver = "2"
 members = [
     "crates/kanari-types",
     "crates/kannari-config",
-    "crates/kanari-open-rpc",
+    "crates/rooch-open-rpc",
     "frameworks/framework-builder",
     "frameworks/framework-release",
     "frameworks/framework-types",
     "frameworks/kanari-library",
+    "crates/kanari-cosmwasm-vm",
 ]
 
 # All workspace members should inherit these keys
@@ -32,12 +33,17 @@ tracing-subscriber = { version = "0.3.19" }
 include_dir = { version = "0.6.2" }
 bcs = { version = "0.1.3" }
 
+tokio = { version = "1.46.1", features = ["full"] }
+tokio-tungstenite = { version = "0.24.0", features = ["native-tls"] }
+tokio-stream = "0.1.17"
+
 rocksdb = { version = "0.22.0" }
 serde_bytes = "0.11.17"
 serde = { version = "1.0.219", features = ["derive", "rc"] }
 serde_json = { version = "1.0.140", features = ["preserve_order"] }
 serde_yaml = "0.9"
 serde_with = { version = "2.1.0", features = ["hex", "base64"] }
+schemars = { version = "0.8.22", features = ["either"] }
 hex = "0.4.3"
 bitcoin = { version = "0.32.6", features = ["serde"] }
 dirs = "5.0.1"
@@ -45,13 +51,18 @@ opendal = { version = "0.50.2", features = ["services-fs", "services-gcs"] }
 dirs-next = "2.0.0"
 codespan-reporting = "0.11.1"
 itertools = "0.13.0"
-
+versions = "4.1.0"
+wasmer = "4.2.5"
+wasmer-types = "4.2.5"
+wasmer-compiler-singlepass = "4.2.2"
+cosmwasm-vm = { git = "https://github.com/kanari-network/cosmwasm.git", rev = "597d3e8437d8c4d1afce07e5a676c29c751a8a81" }
+cosmwasm-std = { git = "https://github.com/kanari-network/cosmwasm.git", rev = "597d3e8437d8c4d1afce07e5a676c29c751a8a81" }
 
 framework-builder = { path = "frameworks/framework-builder" }
 framework-release = { path = "frameworks/framework-release" }
 framework-types = { path = "frameworks/framework-types" }
 
-
+rand = "0.8.5"
 sha2 = "0.10.9"
 fastcrypto = { git = "https://github.com/kanari-network/fastcrypto.git", branch = "main" }
 fastcrypto-zkp = { git = "https://github.com/kanari-network/fastcrypto.git", branch = "main" }

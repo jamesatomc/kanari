@@ -1,0 +1,20 @@
+[package]
+name = "kanari-cosmwasm-vm"
+authors.workspace = true
+edition.workspace = true
+homepage.workspace = true
+license.workspace = true
+publish.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[dependencies]
+cosmwasm-vm = { workspace = true }
+cosmwasm-std = { workspace = true }
+
+move-core-types = { workspace = true }
+move-vm-types = { workspace = true }
+
+moveos-types = { workspace = true }
+moveos-object-runtime = { workspace = true }
