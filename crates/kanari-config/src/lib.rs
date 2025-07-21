@@ -8,7 +8,7 @@ use clap::Parser;
 use moveos_config::{temp_dir, DataDirPath};
 use once_cell::sync::Lazy;
 use rooch_types::crypto::RoochKeyPair;
-use kanari_types::genesis_config::KanariGenesisConfig;
+use rooch_types::genesis_config::GenesisConfig;
 use rooch_types::rooch_network::{BuiltinChainID, RoochChainID, RoochNetwork};
 use rooch_types::service_status::ServiceStatus;
 use rooch_types::service_type::ServiceType;
@@ -290,10 +290,10 @@ impl KanariOpt {
         self.chain_id.clone().unwrap_or_default()
     }
 
-    pub fn genesis_config(&self) -> Option<KanariGenesisConfig> {
+    pub fn genesis_config(&self) -> Option<GenesisConfig> {
         self.genesis_config.clone().map(|path| {
             let path = path.trim();
-            let genesis_config: KanariGenesisConfig = match BuiltinChainID::from_str(path) {
+            let genesis_config: GenesisConfig = match BuiltinChainID::from_str(path) {
                 Ok(builtin_id) => builtin_id.genesis_config().clone(),
                 Err(_) => {
                     let content =
