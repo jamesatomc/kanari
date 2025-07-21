@@ -48,6 +48,7 @@ use rooch_types::{
     address::BitcoinAddress,
     bitcoin::{genesis::MultisignAccountConfig, ord::InscriptionStore, utxo::BitcoinUTXOStore, network::Network},
     framework::address_mapping::RoochToBitcoinAddressMapping,
+    genesis_config::GenesisConfig,
 };
 use bitcoin::{block::Header, BlockHash};
 use framework_builder::stdlib_version::StdlibVersion;
@@ -147,6 +148,47 @@ impl KanariGenesisConfig {
         let content = serde_yaml::to_string(self)?;
         std::fs::write(path, content)?;
         Ok(())
+    }
+
+    /// Get the initial supply in KARI tokens (human readable format)
+    pub fn get_initial_supply_in_kari(&self) -> f64 {
+        Self::smallest_unit_to_kari(self.initial_supply)
+    }
+}
+
+// Conversion implementations for interoperability with rooch-types
+impl From<GenesisConfig> for KanariGenesisConfig {
+    fn from(genesis_config: GenesisConfig) -> Self {
+        KanariGenesisConfig {
+            bitcoin_network: genesis_config.bitcoin_network,
+            bitcoin_block_height: genesis_config.bitcoin_block_height,
+            bitcoin_block_hash: genesis_config.bitcoin_block_hash,
+            bitcoin_reorg_block_count: genesis_config.bitcoin_reorg_block_count,
+            timestamp: genesis_config.timestamp,
+            sequencer_account: genesis_config.sequencer_account,
+            kanari_dao: genesis_config.rooch_dao,
+            genesis_objects: genesis_config.genesis_objects,
+            stdlib_version: genesis_config.stdlib_version,
+            network_id: "kanari".to_string(), // Default network ID for Kanari
+            initial_supply: KARI_INITIAL_SUPPLY, // Default KARI supply
+            genesis_validators: vec![], // Default empty validators
+        }
+    }
+}
+
+impl From<KanariGenesisConfig> for GenesisConfig {
+    fn from(kanari_config: KanariGenesisConfig) -> Self {
+        GenesisConfig {
+            bitcoin_network: kanari_config.bitcoin_network,
+            bitcoin_block_height: kanari_config.bitcoin_block_height,
+            bitcoin_block_hash: kanari_config.bitcoin_block_hash,
+            bitcoin_reorg_block_count: kanari_config.bitcoin_reorg_block_count,
+            timestamp: kanari_config.timestamp,
+            sequencer_account: kanari_config.sequencer_account,
+            rooch_dao: kanari_config.kanari_dao,
+            genesis_objects: kanari_config.genesis_objects,
+            stdlib_version: kanari_config.stdlib_version,
+        }
     }
 }
 

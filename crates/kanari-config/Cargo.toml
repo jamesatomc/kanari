@@ -1,5 +1,5 @@
 [package]
-name = "kannari-config"
+name = "kanari-config"
 authors.workspace = true
 edition.workspace = true
 homepage.workspace = true
@@ -21,6 +21,7 @@ dirs-next = { workspace = true }
 hex = { workspace = true }
 opendal = { workspace = true }
 
+kanari-types = { workspace = true }
 rooch-types = { workspace = true }
 moveos-config = { workspace = true }
 moveos-types = { workspace = true }
