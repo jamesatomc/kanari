@@ -1,0 +1,16 @@
+[package]
+name = "framework-types"
+authors.workspace = true
+edition.workspace = true
+homepage.workspace = true
+license.workspace = true
+publish.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[dependencies]
+move-core-types = { workspace = true }
+
+moveos-types = { workspace = true }
+moveos-stdlib = { workspace = true }

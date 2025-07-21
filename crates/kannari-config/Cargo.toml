@@ -1,0 +1,26 @@
+[package]
+name = "kannari-config"
+authors.workspace = true
+edition.workspace = true
+homepage.workspace = true
+license.workspace = true
+publish.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[dependencies]
+anyhow = { workspace = true }
+serde = { workspace = true }
+serde_yaml = { workspace = true }
+serde_json = { workspace = true }
+dirs = { workspace = true }
+once_cell = { workspace = true }
+clap = { workspace = true }
+dirs-next = { workspace = true }
+hex = { workspace = true }
+opendal = { workspace = true }
+
+rooch-types = { workspace = true }
+moveos-config = { workspace = true }
+moveos-types = { workspace = true }

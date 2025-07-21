@@ -1,0 +1,39 @@
+name: Check-Build-Test
+
+on:
+  push:
+    branches: ["move"]
+    paths-ignore:
+      - "crates/kanari-types"
+      - "README.md"
+
+  pull_request:
+    branches: ["move"]
+    paths-ignore:
+      - "crates/kanari-types"
+      - "README.md"
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+  ENV_TEST_ON_CI: 1
+  CARGO_INCREMENTAL: 0
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install build dependencies including lld
+        run: sudo apt-get update && sudo apt-get install -y build-essential cmake gcc libssl-dev pkg-config libclang-dev lld
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: 1.88.0
+          override: true
+      - name: Build
+        run: cargo build --verbose
+      - name: Test
+        run: cargo test --verbose
+      - name: Check formatting
+        run: cargo fmt --all -- --check
