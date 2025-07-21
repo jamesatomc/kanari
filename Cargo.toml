@@ -4,6 +4,7 @@ resolver = "2"
 members = [
     "crates/kanari-types",
     "crates/kannari-config",
+    "crates/kanari-open-rpc",
     "frameworks/framework-builder",
     "frameworks/framework-release",
     "frameworks/framework-types",
@@ -49,6 +50,7 @@ itertools = "0.13.0"
 framework-builder = { path = "frameworks/framework-builder" }
 framework-release = { path = "frameworks/framework-release" }
 framework-types = { path = "frameworks/framework-types" }
+
 
 sha2 = "0.10.9"
 fastcrypto = { git = "https://github.com/kanari-network/fastcrypto.git", branch = "main" }
