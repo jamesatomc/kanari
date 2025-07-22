@@ -5,7 +5,7 @@ use crate::proposer_config::ProposerConfig;
 use crate::store_config::StoreConfig;
 use anyhow::Result;
 use clap::Parser;
-use moveos_config::{temp_dir, DataDirPath};
+use moveos_config::{DataDirPath, temp_dir};
 use once_cell::sync::Lazy;
 use rooch_types::crypto::RoochKeyPair;
 use rooch_types::genesis_config::GenesisConfig;
@@ -29,7 +29,6 @@ pub const KANARI_DIR: &str = ".kanari";
 pub const KANARI_CONFIR_DIR: &str = "kanari_config";
 pub const KANARI_CLIENT_CONFIG: &str = "kanari.yaml";
 pub const KANARI_KEYSTORE_FILENAME: &str = "kanari.keystore";
-
 
 pub static R_DEFAULT_BASE_DATA_DIR: Lazy<PathBuf> = Lazy::new(|| {
     dirs_next::home_dir()

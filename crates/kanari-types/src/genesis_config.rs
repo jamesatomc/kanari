@@ -1,12 +1,7 @@
 // Copyright (c) KanariNetwork
 // SPDX-License-Identifier: Apache-2.0
 
-use rooch_types::{
-    address::BitcoinAddress,
-    bitcoin::{genesis::MultisignAccountConfig, ord::InscriptionStore, utxo::BitcoinUTXOStore},
-    framework::address_mapping::RoochToBitcoinAddressMapping,
-};
-use bitcoin::{block::Header, BlockHash};
+use bitcoin::{BlockHash, block::Header};
 use framework_builder::stdlib_version::StdlibVersion;
 use move_core_types::value::MoveTypeLayout;
 use moveos_types::{
@@ -15,6 +10,11 @@ use moveos_types::{
     state::{MoveState, ObjectState},
 };
 use once_cell::sync::Lazy;
+use rooch_types::{
+    address::BitcoinAddress,
+    bitcoin::{genesis::MultisignAccountConfig, ord::InscriptionStore, utxo::BitcoinUTXOStore},
+    framework::address_mapping::RoochToBitcoinAddressMapping,
+};
 use serde::{Deserialize, Serialize};
 use std::str::FromStr;
 
@@ -84,10 +84,10 @@ pub static G_LOCAL_CONFIG: Lazy<GenesisConfig> = Lazy::new(|| GenesisConfig {
         )
         .unwrap(),
         threshold: 1,
-        participant_public_keys: vec![hex::decode(
-            "03ff7e1d7b4a152671124545f4fb68efe2a9bd0b3870ac22fee4afd4ecdfa8a19c",
-        )
-        .unwrap()],
+        participant_public_keys: vec![
+            hex::decode("03ff7e1d7b4a152671124545f4fb68efe2a9bd0b3870ac22fee4afd4ecdfa8a19c")
+                .unwrap(),
+        ],
     },
     genesis_objects: vec![
         (
@@ -123,10 +123,10 @@ pub static G_DEV_CONFIG: Lazy<GenesisConfig> = Lazy::new(|| GenesisConfig {
         .unwrap(),
         threshold: 1,
         // Dev multisign account public key is the same as sequencer account
-        participant_public_keys: vec![hex::decode(
-            "026c9e5a00643a706d3826424f766bbbb08adada4dc357c1b279ad4662d2fd1e2e",
-        )
-        .unwrap()],
+        participant_public_keys: vec![
+            hex::decode("026c9e5a00643a706d3826424f766bbbb08adada4dc357c1b279ad4662d2fd1e2e")
+                .unwrap(),
+        ],
     },
     genesis_objects: vec![
         (
@@ -297,8 +297,8 @@ pub static G_MAIN_CONFIG: Lazy<GenesisConfig> = Lazy::new(|| GenesisConfig {
 #[cfg(test)]
 mod tests {
     use super::GenesisConfig;
-    use rooch_types::{bitcoin::multisign_account, crypto::RoochKeyPair};
     use moveos_types::h256::sha2_256_of;
+    use rooch_types::{bitcoin::multisign_account, crypto::RoochKeyPair};
 
     fn test_genesis_config(config: &GenesisConfig) {
         //println!("sequence_account: {}", config.sequencer_account);
