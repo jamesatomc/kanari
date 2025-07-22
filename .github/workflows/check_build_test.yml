@@ -31,6 +31,8 @@ jobs:
         with:
           toolchain: 1.88.0
           override: true
+      - name: Install rustfmt
+        run: rustup component add --toolchain 1.88.0 rustfmt
       - name: Build
         run: cargo build --verbose
       - name: Test

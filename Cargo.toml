@@ -8,7 +8,7 @@ members = [
     "frameworks/framework-builder",
     "frameworks/framework-release",
     "frameworks/framework-types",
-    "frameworks/kanari-library", "crates/kanari-open-rpc-spec-builder", "crates/kanari-rpc-api", "crates/kanari-open-rpc-spec",
+    "frameworks/kanari-library", "crates/kanari-open-rpc-spec-builder", "crates/kanari-rpc-api", "crates/kanari-open-rpc-spec", "crates/rooch-open-rpc",
 ]
 
 # All workspace members should inherit these keys
@@ -24,6 +24,10 @@ rust-version = "1.88.0"
 version = "0.0.1"
 
 [workspace.dependencies]
+tokio = { version = "1.46.1", features = ["full"] }
+tokio-tungstenite = { version = "0.24.0", features = ["native-tls"] }
+tokio-stream = "0.1.17"
+
 anyhow = "1.0.76"
 clap = { version = "4.5.13", features = ["derive", "env"] }
 once_cell = { version = "1.17.1" }
@@ -45,6 +49,8 @@ opendal = { version = "0.50.2", features = ["services-fs", "services-gcs"] }
 dirs-next = "2.0.0"
 codespan-reporting = "0.11.1"
 itertools = "0.13.0"
+schemars = { version = "0.8.22", features = ["either"] }
+versions = "4.1.0"
 
 kanari = { path = "crates/kanari" }
 kanari-types = { path = "crates/kanari-types" }
@@ -53,6 +59,7 @@ framework-builder = { path = "frameworks/framework-builder" }
 framework-release = { path = "frameworks/framework-release" }
 framework-types = { path = "frameworks/framework-types" }
 
+rand = { version = "0.8.5" }
 sha2 = "0.10.9"
 fastcrypto = { git = "https://github.com/kanari-network/fastcrypto.git", branch = "main" }
 fastcrypto-zkp = { git = "https://github.com/kanari-network/fastcrypto.git", branch = "main" }

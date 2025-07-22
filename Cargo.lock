@@ -4141,6 +4141,18 @@ name = "kanari-library"
 version = "0.0.1"
 
 [[package]]
+name = "kanari-open-rpc-spec"
+version = "0.0.1"
+
+[[package]]
+name = "kanari-open-rpc-spec-builder"
+version = "0.0.1"
+
+[[package]]
+name = "kanari-rpc-api"
+version = "0.0.1"
+
+[[package]]
 name = "kanari-types"
 version = "0.0.1"
 dependencies = [
@@ -6854,6 +6866,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "rooch-open-rpc"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "clap",
+ "fastcrypto 0.1.9 (git+https://github.com/kanari-network/fastcrypto.git?branch=main)",
+ "rand 0.8.5",
+ "schemars",
+ "serde 1.0.219",
+ "serde_json",
+ "tokio",
+ "versions",
+]
+
+[[package]]
 name = "rooch-types"
 version = "0.9.7"
 source = "git+https://github.com/rooch-network/rooch.git?rev=13f4dc0#13f4dc0de28c73e7888591848b0afd089e1a9f8b"
@@ -8803,6 +8830,16 @@ name = "version_check"
 version = "0.9.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0b928f33d975fc6ad9f86c8f283853ad26bdd5b10b7f1542aa2fa15e2289105a"
+
+[[package]]
+name = "versions"
+version = "4.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ee97e1d97bd593fb513912a07691b742361b3dd64ad56f2c694ea2dbfe0665d3"
+dependencies = [
+ "itertools 0.10.5",
+ "nom 7.1.3",
+]
 
 [[package]]
 name = "wait-timeout"
