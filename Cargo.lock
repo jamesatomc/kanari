@@ -4395,7 +4395,12 @@ version = "0.0.1"
 dependencies = [
  "anyhow",
  "clap",
+ "hex",
  "kanari-config",
+ "kanari-db",
+ "kanari-types",
+ "moveos-types",
+ "prometheus",
  "tokio",
  "tracing",
  "tracing-subscriber",

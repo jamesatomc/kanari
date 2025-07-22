@@ -3,16 +3,15 @@
 
 use kanari_config::store_config::StoreConfig;
 
-
 use std::collections::{HashMap, HashSet};
 
 use accumulator::accumulator_info::AccumulatorInfo;
-use anyhow::{anyhow, Error, Result};
+use anyhow::{Error, Result, anyhow};
 use moveos_common::utils::to_bytes;
 use moveos_store::config_store::STARTUP_INFO_KEY;
 use moveos_store::transaction_store::TransactionStore as TxExecutionInfoStore;
 use moveos_store::{
-    MoveOSStore, CONFIG_STARTUP_INFO_COLUMN_FAMILY_NAME,
+    CONFIG_STARTUP_INFO_COLUMN_FAMILY_NAME, MoveOSStore,
     TRANSACTION_EXECUTION_INFO_COLUMN_FAMILY_NAME,
 };
 use moveos_types::access_path::AccessPath;
@@ -25,23 +24,23 @@ use prometheus::Registry;
 use raw_store::metrics::DBMetrics;
 use raw_store::rocks::batch::WriteBatch;
 use raw_store::traits::DBStore;
-use raw_store::{rocks::RocksDB, StoreInstance};
+use raw_store::{StoreInstance, rocks::RocksDB};
 use rooch_anomalies::TxAnomalies;
 use rooch_indexer::store::traits::IndexerStoreTrait;
-use rooch_indexer::{indexer_reader::IndexerReader, list_field_indexer_keys, IndexerStore};
+use rooch_indexer::{IndexerStore, indexer_reader::IndexerReader, list_field_indexer_keys};
 use rooch_store::meta_store::{MetaStore, SEQUENCER_INFO_KEY};
 use rooch_store::state_store::StateStore;
 use rooch_store::transaction_store::TransactionStore;
 use rooch_store::{
-    RoochStore, META_SEQUENCER_INFO_COLUMN_FAMILY_NAME, STATE_CHANGE_SET_COLUMN_FAMILY_NAME,
+    META_SEQUENCER_INFO_COLUMN_FAMILY_NAME, RoochStore, STATE_CHANGE_SET_COLUMN_FAMILY_NAME,
     TRANSACTION_COLUMN_FAMILY_NAME, TX_SEQUENCE_INFO_MAPPING_COLUMN_FAMILY_NAME,
 };
 use rooch_types::indexer::field::{
-    collect_revert_field_change_ids, handle_revert_field_change, IndexerFieldChanges,
+    IndexerFieldChanges, collect_revert_field_change_ids, handle_revert_field_change,
 };
 use rooch_types::indexer::state::{
-    collect_revert_object_change_ids, handle_revert_object_change, IndexerObjectStateChangeSet,
-    IndexerObjectStatesIndexGenerator,
+    IndexerObjectStateChangeSet, IndexerObjectStatesIndexGenerator,
+    collect_revert_object_change_ids, handle_revert_object_change,
 };
 use rooch_types::sequencer::SequencerInfo;
 use tracing::{error, info, warn};
