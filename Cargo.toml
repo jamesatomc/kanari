@@ -8,7 +8,7 @@ members = [
     "frameworks/framework-builder",
     "frameworks/framework-release",
     "frameworks/framework-types",
-    "frameworks/kanari-library", "crates/kanari-open-rpc-spec-builder", "crates/kanari-rpc-api", "crates/kanari-open-rpc-spec", "crates/rooch-open-rpc",
+    "frameworks/kanari-library", "crates/kanari-open-rpc-spec-builder", "crates/kanari-rpc-api", "crates/kanari-open-rpc-spec", "crates/rooch-open-rpc", "crates/kanari-db",
 ]
 
 # All workspace members should inherit these keys
@@ -44,7 +44,10 @@ serde_yaml = "0.9"
 serde_with = { version = "2.1.0", features = ["hex", "base64"] }
 hex = "0.4.3"
 bitcoin = { version = "0.32.6", features = ["serde"] }
+prometheus = "0.13.3"
 dirs = "5.0.1"
+libsqlite3-sys = { version = "0.35.0", features = ["bundled"] }
+diesel = { version = "2.2.12", features = ["sqlite", "bundled"] }
 opendal = { version = "0.50.2", features = ["services-fs", "services-gcs"] }
 dirs-next = "2.0.0"
 codespan-reporting = "0.11.1"
@@ -58,13 +61,17 @@ kanari-config = { path = "crates/kanari-config" }
 framework-builder = { path = "frameworks/framework-builder" }
 framework-release = { path = "frameworks/framework-release" }
 framework-types = { path = "frameworks/framework-types" }
+kanari-db = { path = "crates/kanari-db" }
 
 rand = { version = "0.8.5" }
 sha2 = "0.10.9"
 fastcrypto = { git = "https://github.com/kanari-network/fastcrypto.git", branch = "main" }
 fastcrypto-zkp = { git = "https://github.com/kanari-network/fastcrypto.git", branch = "main" }
 
-
+rooch-keys = { git = "https://github.com/rooch-network/rooch.git", rev = "13f4dc0" }
+rooch-anomalies = { git = "https://github.com/rooch-network/rooch.git", rev = "13f4dc0" }
+rooch-store = { git = "https://github.com/rooch-network/rooch.git", rev = "13f4dc0" }
+rooch-indexer = { git = "https://github.com/rooch-network/rooch.git", rev = "13f4dc0" }
 rooch-types = { git = "https://github.com/rooch-network/rooch.git", rev = "13f4dc0" }
 rooch-open-rpc-macros = { git = "https://github.com/rooch-network/rooch.git", rev = "13f4dc0" }
 rooch-open-rpc-spec-builder = { git = "https://github.com/rooch-network/rooch.git", rev = "13f4dc0" }

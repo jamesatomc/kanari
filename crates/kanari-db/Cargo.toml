@@ -1,0 +1,27 @@
+[package]
+name = "kanari-db"
+authors.workspace = true
+edition.workspace = true
+homepage.workspace = true
+license.workspace = true
+publish.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[dependencies]
+anyhow = { workspace = true }
+prometheus = { workspace = true }
+tracing = { workspace = true }
+
+raw-store = { workspace = true }
+moveos-types = { workspace = true }
+moveos-store = { workspace = true }
+accumulator = { workspace = true }
+moveos-common = { workspace = true }
+
+rooch-anomalies = { workspace = true }
+kanari-config = { workspace = true }
+rooch-store = { workspace = true }
+rooch-indexer = { workspace = true }
+rooch-types = { workspace = true }
