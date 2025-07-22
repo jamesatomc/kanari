@@ -1,0 +1,21 @@
+[package]
+name = "kanari"
+authors.workspace = true
+edition.workspace = true
+homepage.workspace = true
+license.workspace = true
+publish.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[dependencies]
+kanari-types.workspace = true
+kanari-config.workspace = true
+framework-builder.workspace = true
+framework-release.workspace = true
+framework-types.workspace = true
+clap = { workspace = true }
+anyhow = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }

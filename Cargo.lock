@@ -4102,6 +4102,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "kanari"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "clap",
+ "framework-builder 0.0.1",
+ "framework-release",
+ "framework-types 0.0.1",
+ "kanari-config",
+ "kanari-types",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
 name = "kanari-config"
 version = "0.0.1"
 dependencies = [

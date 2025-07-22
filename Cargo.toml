@@ -2,6 +2,7 @@
 resolver = "2"
 
 members = [
+    "crates/kanari",
     "crates/kanari-types",
     "crates/kanari-config",
     "frameworks/framework-builder",
@@ -45,6 +46,7 @@ dirs-next = "2.0.0"
 codespan-reporting = "0.11.1"
 itertools = "0.13.0"
 
+kanari = { path = "crates/kanari" }
 kanari-types = { path = "crates/kanari-types" }
 kanari-config = { path = "crates/kanari-config" }
 framework-builder = { path = "frameworks/framework-builder" }

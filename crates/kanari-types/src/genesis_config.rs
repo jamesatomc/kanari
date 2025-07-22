@@ -32,8 +32,8 @@ pub struct GenesisConfig {
     pub timestamp: u64,
     /// The genesis sequencer account
     pub sequencer_account: BitcoinAddress,
-    /// The genesis rooch dao account multisign config
-    pub rooch_dao: MultisignAccountConfig,
+    /// The genesis kanari dao account multisign config
+    pub kanari_dao: MultisignAccountConfig,
     pub genesis_objects: Vec<(ObjectState, MoveTypeLayout)>,
     pub stdlib_version: StdlibVersion,
 }
@@ -72,13 +72,13 @@ pub static G_LOCAL_CONFIG: Lazy<GenesisConfig> = Lazy::new(|| GenesisConfig {
     .expect("Should be valid"),
     bitcoin_reorg_block_count: 0,
     timestamp: 0,
-    // The local sequencer account and rooch dao account
+    // The local sequencer account and kanari dao account
     // will be update when the server first start
     sequencer_account: BitcoinAddress::from_str(
         "bc1pxup9p7um3t5knqn0yxfrq5d0mgul9ts993j32tsfxn68qa4pl3nq2qhh2e",
     )
     .unwrap(),
-    rooch_dao: MultisignAccountConfig {
+    kanari_dao: MultisignAccountConfig {
         multisign_bitcoin_address: BitcoinAddress::from_str(
             "bc1pevdrc8yqmgd94h2mpz9st0u77htmx935hzck3ruwsvcf4w7wrnqqd0yvze",
         )
@@ -116,7 +116,7 @@ pub static G_DEV_CONFIG: Lazy<GenesisConfig> = Lazy::new(|| GenesisConfig {
         "bc1p56tdhxkcpc5xvdurfnufn9lkkywsh0gxttv5ktkvlezj0t23nasq8lj2sg",
     )
     .expect("Should be valid"),
-    rooch_dao: MultisignAccountConfig {
+    kanari_dao: MultisignAccountConfig {
         multisign_bitcoin_address: BitcoinAddress::from_str(
             "bc1pu38mumfnuppqn54kcnyymmqzpqgmmfxlgnu6dsc6qhschy7cj76qkcl24p",
         )
@@ -162,7 +162,7 @@ pub static G_TEST_CONFIG: Lazy<GenesisConfig> = Lazy::new(|| {
             "tb1p56tdhxkcpc5xvdurfnufn9lkkywsh0gxttv5ktkvlezj0t23nasqshy928",
         )
         .expect("Should be valid"),
-        rooch_dao: MultisignAccountConfig {
+        kanari_dao: MultisignAccountConfig {
             multisign_bitcoin_address: BitcoinAddress::from_str(
                 "bc1prcajaj9n7e29u4dfp33x3hcf52yqeegspdpcd79pqu4fpr6llx4sugkfjt",
             )
@@ -219,7 +219,7 @@ pub static G_MAIN_CONFIG: Lazy<GenesisConfig> = Lazy::new(|| GenesisConfig {
         "bc1pwxpq9pxgv2jnvzu2pjska3jkfurxsdt075yds3u0rsj9cu39g4esjdzt8z",
     )
     .expect("Should be valid"),
-    rooch_dao: MultisignAccountConfig {
+    kanari_dao: MultisignAccountConfig {
         multisign_bitcoin_address: BitcoinAddress::from_str(
             "bc1prcajaj9n7e29u4dfp33x3hcf52yqeegspdpcd79pqu4fpr6llx4sugkfjt",
         )
@@ -303,13 +303,13 @@ mod tests {
     fn test_genesis_config(config: &GenesisConfig) {
         //println!("sequence_account: {}", config.sequencer_account);
         let multisign_account = multisign_account::generate_multisign_address(
-            config.rooch_dao.threshold as usize,
-            config.rooch_dao.participant_public_keys.clone(),
+            config.kanari_dao.threshold as usize,
+            config.kanari_dao.participant_public_keys.clone(),
         )
         .unwrap();
         println!("multisign_account: {}", multisign_account);
         assert_eq!(
-            config.rooch_dao.multisign_bitcoin_address,
+            config.kanari_dao.multisign_bitcoin_address,
             multisign_account
         );
     }
