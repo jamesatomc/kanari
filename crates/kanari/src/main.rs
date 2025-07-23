@@ -62,7 +62,7 @@ async fn main() -> Result<()> {
 async fn start_node(mut config: KanariOpt) -> Result<()> {
     // Initialize the configuration first
     config.init()?;
-    
+
     info!("Kanari node configuration: {:?}", config);
     info!("Starting Kanari blockchain node...");
 

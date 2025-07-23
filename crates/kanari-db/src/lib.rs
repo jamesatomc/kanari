@@ -92,7 +92,7 @@ impl RoochDB {
         column_families.append(&mut rooch_store::StoreMeta::get_column_family_names().to_vec());
         // Add Kanari-specific column families
         column_families.push(KANARI_BLOCK_COLUMN_FAMILY_NAME);
-        
+
         //ensure no duplicate column families
         {
             let mut set = HashSet::with_capacity(column_families.len());
@@ -121,28 +121,37 @@ impl RoochDB {
     pub fn save_block(&self, block: &Block) -> Result<()> {
         let block_bytes = bcs::to_bytes(block)?;
         let block_key = block.block_number.to_be_bytes();
-        
+
         // Store the block using the rooch_store instance with proper column family
         let mut write_batch = WriteBatch::new();
         write_batch.put(block_key.to_vec(), block_bytes)?;
-        
+
         // Write to database using the Kanari blocks column family
-        self.rooch_store.store_instance.write_batch(KANARI_BLOCK_COLUMN_FAMILY_NAME, write_batch)?;
-        
-        info!("Successfully saved block #{} to database", block.block_number);
+        self.rooch_store
+            .store_instance
+            .write_batch(KANARI_BLOCK_COLUMN_FAMILY_NAME, write_batch)?;
+
+        info!(
+            "Successfully saved block #{} to database",
+            block.block_number
+        );
         Ok(())
     }
 
     /// Get a block from the database by block number
     pub fn get_block(&self, block_number: u128) -> Result<Option<Block>> {
         let block_key = block_number.to_be_bytes();
-        
-        match self.rooch_store.store_instance.get(KANARI_BLOCK_COLUMN_FAMILY_NAME, &block_key)? {
+
+        match self
+            .rooch_store
+            .store_instance
+            .get(KANARI_BLOCK_COLUMN_FAMILY_NAME, &block_key)?
+        {
             Some(block_bytes) => {
                 let block: Block = bcs::from_bytes(&block_bytes)?;
                 Ok(Some(block))
             }
-            None => Ok(None)
+            None => Ok(None),
         }
     }
 
