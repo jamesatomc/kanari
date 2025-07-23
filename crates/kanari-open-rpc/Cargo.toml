@@ -1,5 +1,5 @@
 [package]
-name = "rooch-open-rpc"
+name = "kanari-open-rpc"
 authors.workspace = true
 edition.workspace = true
 homepage.workspace = true

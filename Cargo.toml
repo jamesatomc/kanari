@@ -8,7 +8,12 @@ members = [
     "frameworks/framework-builder",
     "frameworks/framework-release",
     "frameworks/framework-types",
-    "frameworks/kanari-library", "crates/kanari-open-rpc-spec-builder", "crates/kanari-rpc-api", "crates/kanari-open-rpc-spec", "crates/rooch-open-rpc", "crates/kanari-db",
+    "frameworks/kanari-library", 
+    "crates/kanari-open-rpc-spec-builder", 
+    "crates/kanari-rpc-api", 
+    "crates/kanari-open-rpc-spec", 
+    "crates/kanari-open-rpc", 
+    "crates/kanari-db",
 ]
 
 # All workspace members should inherit these keys
@@ -68,7 +73,7 @@ sha2 = "0.10.9"
 fastcrypto = { git = "https://github.com/kanari-network/fastcrypto.git", branch = "main" }
 fastcrypto-zkp = { git = "https://github.com/kanari-network/fastcrypto.git", branch = "main" }
 
-rooch-keys = { git = "https://github.com/rooch-network/rooch.git", rev = "13f4dc0" }
+rooch-key = { git = "https://github.com/rooch-network/rooch.git", rev = "13f4dc0" }
 rooch-anomalies = { git = "https://github.com/rooch-network/rooch.git", rev = "13f4dc0" }
 rooch-store = { git = "https://github.com/rooch-network/rooch.git", rev = "13f4dc0" }
 rooch-indexer = { git = "https://github.com/rooch-network/rooch.git", rev = "13f4dc0" }

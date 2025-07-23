@@ -6,7 +6,7 @@ use kanari_types::block::Block;
 use moveos_types::h256::H256;
 use std::time::{SystemTime, UNIX_EPOCH};
 
-use tracing::{error, info};
+use tracing::{error, info, warn};
 
 #[derive(Parser)]
 #[clap(name = "kari", author = "The Kanari Core Contributors")]
@@ -59,7 +59,10 @@ async fn main() -> Result<()> {
     Ok(())
 }
 
-async fn start_node(config: KanariOpt) -> Result<()> {
+async fn start_node(mut config: KanariOpt) -> Result<()> {
+    // Initialize the configuration first
+    config.init()?;
+    
     info!("Kanari node configuration: {:?}", config);
     info!("Starting Kanari blockchain node...");
 
@@ -84,8 +87,30 @@ async fn start_node(config: KanariOpt) -> Result<()> {
             .unwrap_or_else(|| std::path::PathBuf::from(".kanari"))
     );
 
+    // Display information about existing blocks
+    match db.get_latest_block_number() {
+        Ok(Some(latest_block_number)) => {
+            info!("Latest block in database: #{}", latest_block_number);
+            // Display the latest block details
+            if let Ok(Some(latest_block)) = db.get_block(latest_block_number) {
+                info!("Latest block details: {:?}", latest_block);
+            }
+        }
+        Ok(None) => {
+            info!("No blocks found in database. Starting fresh blockchain.");
+        }
+        Err(e) => {
+            warn!("Error checking for existing blocks: {}", e);
+        }
+    }
+
+    // Start with the next block number
+    let mut block_number = match db.get_latest_block_number()? {
+        Some(latest) => latest + 1,
+        None => 1,
+    };
+
     // Create a sample block every 10 seconds to demonstrate block saving functionality
-    let mut block_number = 0u128;
     loop {
         tokio::time::sleep(tokio::time::Duration::from_secs(10)).await;
 
@@ -111,7 +136,7 @@ async fn generate_wallet() -> Result<()> {
     Ok(())
 }
 
-async fn create_and_save_block(_db: &RoochDB, block_number: u128) -> Result<H256> {
+async fn create_and_save_block(db: &RoochDB, block_number: u128) -> Result<H256> {
     // Get current timestamp
     let timestamp = SystemTime::now().duration_since(UNIX_EPOCH)?.as_secs();
 
@@ -120,7 +145,11 @@ async fn create_and_save_block(_db: &RoochDB, block_number: u128) -> Result<H256
         H256::zero() // Genesis block
     } else {
         // In a real implementation, this would be the hash of the previous block
-        H256::random()
+        // For now, let's try to get the previous block's hash
+        match db.get_block(block_number - 1)? {
+            Some(prev_block) => prev_block.batch_hash,
+            None => H256::zero(), // Fallback if previous block not found
+        }
     };
 
     let batch_hash = H256::random(); // In a real implementation, this would be computed from transactions
@@ -138,10 +167,16 @@ async fn create_and_save_block(_db: &RoochDB, block_number: u128) -> Result<H256
 
     info!("Created block #{} at timestamp {}", block_number, timestamp);
 
-    // In a real implementation, you would save the block to the database
-    // For now, we'll just log the block creation as the RoochDB interface
-    // may need additional configuration for block storage
-    info!("Block details: {:?}", block);
+    // Actually save the block to the database
+    match db.save_block(&block) {
+        Ok(()) => {
+            info!("Block #{} successfully saved to database", block_number);
+        }
+        Err(e) => {
+            error!("Failed to save block #{} to database: {}", block_number, e);
+            return Err(e);
+        }
+    }
 
     // Return the batch_hash as the block identifier
     Ok(batch_hash)
