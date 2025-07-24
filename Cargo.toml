@@ -5,6 +5,7 @@ members = [
     "crates/kanari",
     "crates/kanari-types",
     "crates/kanari-config",
+    "crates/kanari-p2p",
     "frameworks/framework-builder",
     "frameworks/framework-release",
     "frameworks/framework-types",
@@ -73,7 +74,9 @@ sha2 = "0.10.9"
 fastcrypto = { git = "https://github.com/kanari-network/fastcrypto.git", branch = "main" }
 fastcrypto-zkp = { git = "https://github.com/kanari-network/fastcrypto.git", branch = "main" }
 
+rooch = { git = "https://github.com/rooch-network/rooch.git", rev = "13f4dc0" }
 rooch-rpc-api = { git = "https://github.com/rooch-network/rooch.git", rev = "13f4dc0" }
+rooch-rpc-client = { git = "https://github.com/rooch-network/rooch.git", rev = "13f4dc0" }
 rooch-key = { git = "https://github.com/rooch-network/rooch.git", rev = "13f4dc0" }
 rooch-anomalies = { git = "https://github.com/rooch-network/rooch.git", rev = "13f4dc0" }
 rooch-store = { git = "https://github.com/rooch-network/rooch.git", rev = "13f4dc0" }

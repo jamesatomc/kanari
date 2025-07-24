@@ -8,6 +8,11 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 use tracing::{error, info, warn};
 
+mod commands;
+
+use commands::account::create::CreateCommand;
+use rooch::cli_types::CommandAction;
+
 #[derive(Parser)]
 #[clap(name = "kari", author = "The Kanari Core Contributors")]
 #[clap(about = "Kanari - A high-performance blockchain platform")]
@@ -23,17 +28,11 @@ enum Commands {
         #[clap(flatten)]
         config: KanariOpt,
     },
-    /// Generate a new wallet
-    Keytool {
-        #[clap(subcommand)]
-        keytool_command: KeytoolCommands,
+    /// Create a new account off-chain
+    Create {
+        #[clap(flatten)]
+        create_command: CreateCommand,
     },
-}
-
-#[derive(Subcommand)]
-enum KeytoolCommands {
-    /// Generate a new wallet
-    Generate,
 }
 
 #[tokio::main]
@@ -48,12 +47,13 @@ async fn main() -> Result<()> {
             info!("Starting Kanari node...");
             start_node(config).await?;
         }
-        Commands::Keytool { keytool_command } => match keytool_command {
-            KeytoolCommands::Generate => {
-                info!("Generating new wallet...");
-                generate_wallet().await?;
+        Commands::Create { create_command } => {
+            info!("Creating new account...");
+            let result = create_command.execute().await?;
+            if let Some(address) = result {
+                info!("Account created with address: {:?}", address);
             }
-        },
+        }
     }
 
     Ok(())
@@ -128,12 +128,6 @@ async fn start_node(mut config: KanariOpt) -> Result<()> {
             }
         }
     }
-}
-
-async fn generate_wallet() -> Result<()> {
-    info!("Wallet generation functionality will be implemented here");
-    // TODO: Implement wallet generation logic
-    Ok(())
 }
 
 async fn create_and_save_block(db: &RoochDB, block_number: u128) -> Result<H256> {

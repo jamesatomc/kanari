@@ -1,6 +1,7 @@
 // Copyright (c) KanariNetwork
 // SPDX-License-Identifier: Apache-2.0
 
+use crate::network_config::NetworkConfig;
 use crate::proposer_config::ProposerConfig;
 use crate::store_config::StoreConfig;
 use anyhow::Result;
@@ -20,6 +21,7 @@ use std::sync::Arc;
 use std::{fmt::Debug, path::Path, path::PathBuf};
 
 pub mod config;
+pub mod network_config;
 pub mod proposer_config;
 pub mod server_config;
 pub mod settings;
@@ -144,6 +146,9 @@ pub struct KanariOpt {
     #[clap(flatten)]
     pub proposer: ProposerConfig,
 
+    #[clap(flatten)]
+    pub network: NetworkConfig,
+
     #[clap(long, default_value_t, value_enum)]
     pub service_status: ServiceStatus,
 
@@ -197,8 +202,8 @@ impl KanariOpt {
             btc_reorg_aware_height: None,
             sequencer_account: None,
             proposer_account: None,
-            // da: DAConfig::default(),
             proposer: ProposerConfig::default(),
+            network: NetworkConfig::default(),
             service_status: ServiceStatus::default(),
             traffic_per_second: None,
             traffic_burst_size: None,
