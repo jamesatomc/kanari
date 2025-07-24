@@ -4509,6 +4509,7 @@ dependencies = [
  "rooch-anomalies",
  "rooch-indexer",
  "rooch-key",
+ "rooch-rpc-api",
  "rooch-store",
  "rooch-types",
  "tokio",

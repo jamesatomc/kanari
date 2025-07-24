@@ -73,6 +73,7 @@ sha2 = "0.10.9"
 fastcrypto = { git = "https://github.com/kanari-network/fastcrypto.git", branch = "main" }
 fastcrypto-zkp = { git = "https://github.com/kanari-network/fastcrypto.git", branch = "main" }
 
+rooch-rpc-api = { git = "https://github.com/rooch-network/rooch.git", rev = "13f4dc0" }
 rooch-key = { git = "https://github.com/rooch-network/rooch.git", rev = "13f4dc0" }
 rooch-anomalies = { git = "https://github.com/rooch-network/rooch.git", rev = "13f4dc0" }
 rooch-store = { git = "https://github.com/rooch-network/rooch.git", rev = "13f4dc0" }

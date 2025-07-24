@@ -21,6 +21,7 @@ tracing-subscriber.workspace = true
 tokio.workspace = true
 #rooch cryptography - temporarily disabled to avoid build issues
 rooch-key.workspace = true
+rooch-rpc-api.workspace = true
 rooch-anomalies.workspace = true
 rooch-store.workspace = true
 rooch-indexer.workspace = true
