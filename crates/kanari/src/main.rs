@@ -2,8 +2,10 @@ use anyhow::Result;
 use clap::{Parser, Subcommand};
 use kanari_config::KanariOpt;
 use kanari_db::RoochDB;
+use kanari_rpc_api::{KanariRpcServer, RpcServerConfig};
 use kanari_types::block::Block;
 use moveos_types::h256::H256;
+use std::sync::Arc;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use tracing::{error, info, warn};
@@ -14,7 +16,7 @@ use commands::account::create::CreateCommand;
 use rooch::cli_types::CommandAction;
 
 #[derive(Parser)]
-#[clap(name = "kari", author = "The Kanari Core Contributors")]
+#[clap(name = "kari", author = "The Kanari Core Contributors L3")]
 #[clap(about = "Kanari - A high-performance blockchain platform")]
 struct Cli {
     #[clap(subcommand)]
@@ -71,7 +73,7 @@ async fn start_node(mut config: KanariOpt) -> Result<()> {
     let db = match RoochDB::init(&config.store, &registry) {
         Ok(db) => {
             info!("Database initialized successfully");
-            db
+            Arc::new(db)
         }
         Err(e) => {
             error!("Failed to initialize database: {}", e);
@@ -79,7 +81,28 @@ async fn start_node(mut config: KanariOpt) -> Result<()> {
         }
     };
 
-    info!("Node is running on port: {:?}", config.port.unwrap_or(6767));
+    // Start RPC server
+    let rpc_port = config.port.unwrap_or(6767);
+    let rpc_config = RpcServerConfig {
+        listen_address: format!("0.0.0.0:{}", rpc_port).parse()?,
+        max_connections: 1000,
+        max_request_body_size: 64 * 1024 * 1024,  // 64MB
+        max_response_body_size: 64 * 1024 * 1024, // 64MB
+        enable_cors: true,
+        enable_ws: true,
+        batch_requests_limit: 100,
+    };
+
+    let mut rpc_server = KanariRpcServer::new(rpc_config);
+    
+    // Start the RPC server
+    rpc_server.start().await?;
+
+    info!("Node is running on port: {}", rpc_port);
+    info!(
+        "RPC server is running on http://0.0.0.0:{}",
+        rpc_port
+    );
     info!(
         "Data directory: {:?}",
         config
@@ -130,7 +153,7 @@ async fn start_node(mut config: KanariOpt) -> Result<()> {
     }
 }
 
-async fn create_and_save_block(db: &RoochDB, block_number: u128) -> Result<H256> {
+async fn create_and_save_block(db: &Arc<RoochDB>, block_number: u128) -> Result<H256> {
     // Get current timestamp
     let timestamp = SystemTime::now().duration_since(UNIX_EPOCH)?.as_secs();
 

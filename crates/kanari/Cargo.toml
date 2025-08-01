@@ -31,6 +31,7 @@ rooch-types.workspace = true
 kanari-config.workspace = true
 kanari-types.workspace = true
 kanari-db.workspace = true
+kanari-rpc-api.workspace = true
 prometheus.workspace = true
 moveos-types.workspace = true
 move-core-types.workspace = true
