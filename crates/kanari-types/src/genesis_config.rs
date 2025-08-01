@@ -73,19 +73,19 @@ pub static G_LOCAL_CONFIG: Lazy<GenesisConfig> = Lazy::new(|| GenesisConfig {
     bitcoin_reorg_block_count: 0,
     timestamp: 0,
     // The local sequencer account and kanari dao account
-    // will be update when the server first start
+    // Updated with new Rooch wallet address
     sequencer_account: BitcoinAddress::from_str(
-        "bc1pxup9p7um3t5knqn0yxfrq5d0mgul9ts993j32tsfxn68qa4pl3nq2qhh2e",
+        "bcrt1pp44qzxqkf6wy5gpzjy6uzp2zzkldjccrqayssnud24gu2x96gehsjleyq3",
     )
     .unwrap(),
     kanari_dao: MultisignAccountConfig {
         multisign_bitcoin_address: BitcoinAddress::from_str(
-            "bc1pevdrc8yqmgd94h2mpz9st0u77htmx935hzck3ruwsvcf4w7wrnqqd0yvze",
+            "bcrt1pp44qzxqkf6wy5gpzjy6uzp2zzkldjccrqayssnud24gu2x96gehsjleyq3",
         )
         .unwrap(),
         threshold: 1,
         participant_public_keys: vec![
-            hex::decode("03ff7e1d7b4a152671124545f4fb68efe2a9bd0b3870ac22fee4afd4ecdfa8a19c")
+            hex::decode("02be56eda70ca8cfb17cc4139b970e839cc8df1af67a7a721630cc2631f7149261")
                 .unwrap(),
         ],
     },

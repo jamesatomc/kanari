@@ -11,7 +11,7 @@ use jsonrpsee::{
 use std::{net::SocketAddr, sync::Arc, time::SystemTime, collections::hash_map::DefaultHasher, hash::Hasher, str::FromStr};
 use tokio::sync::RwLock;
 use tracing::{info, warn};
-use kanari_types::kari_coin::{KARI, DECIMALS};
+use kanari_types::{kari_coin::{KARI, DECIMALS}, genesis_config::G_LOCAL_CONFIG};
 use move_core_types::u256::U256;
 use moveos_types::state::MoveStructType;
 
@@ -327,19 +327,25 @@ impl KanariRpcApiServer for KanariRpcImpl {
         })
     }
 
-    async fn get_kari_balance(&self, address: String) -> RpcResult<TokenBalance> {
-        // TODO: Implement actual balance lookup from blockchain state
-        warn!("get_kari_balance not fully implemented yet");
+    async fn get_kari_balance(&self, account: Option<String>) -> RpcResult<TokenBalance> {
+        // If no account specified, use the Rooch wallet from config
+        let rooch_address = match account {
+            Some(addr) => addr,
+            None => "rooch1u6kv4l8xgdejlvne8728skvx5jugvp2prlhuhglw72xgl82vc5xs8kr9hj".to_string(),
+        };
         
-        let token_info = self.get_kari_token_info().await?;
-        let balance_raw = "1000000000000"; // Mock balance: 10,000 KARI (with decimals)
-        let balance_scaled = KARI::scaling(U256::from_str(&balance_raw).unwrap_or_default());
-
+        // For demo purposes, return mock balance
+        // In real implementation, query the Rooch network for actual balance
+        let balance = if rooch_address == "rooch1u6kv4l8xgdejlvne8728skvx5jugvp2prlhuhglw72xgl82vc5xs8kr9hj" {
+            100_000_000 * KARI_SCALE // 100M KARI tokens (genesis allocation)
+        } else {
+            0
+        };
+        
         Ok(TokenBalance {
-            address: address.clone(),
-            balance: balance_raw.to_string(),
-            balance_scaled: balance_scaled.to_string(),
-            token_info,
+            address: rooch_address,
+            balance: balance.to_string(),
+            decimals: 18,
         })
     }
 
@@ -349,6 +355,84 @@ impl KanariRpcApiServer for KanariRpcImpl {
         
         let kari_balance = self.get_kari_balance(address).await?;
         Ok(vec![kari_balance])
+    }
+000
+    async fn get_rooch_wallet_info(&self) -> RpcResult<RoochWalletInfo> {
+        let rooch_address = "rooch1u6kv4l8xgdejlvne8728skvx5jugvp2prlhuhglw72xgl82vc5xs8kr9hj".to_string();
+        let kari_balance = self.get_kari_balance(rooch_address.clone()).await?;
+
+        Ok(RoochWalletInfo {
+            rooch_address: rooch_address.clone(),
+            hex_address: "0xe6accafce643732fb2793f94785986a4b88605411fefcba3eef28c8f9d4cc50d".to_string(),
+            bitcoin_address: "bcrt1pp44qzxqkf6wy5gpzjy6uzp2zzkldjccrqayssnud24gu2x96gehsjleyq3".to_string(),
+            public_key: "0x02be56eda70ca8cfb17cc4139b970e839cc8df1af67a7a721630cc2631f7149261".to_string(),
+            is_active: true,
+            kari_balance,
+        })
+    }
+
+    async fn get_rooch_kari_balance(&self) -> RpcResult<TokenBalance> {
+        let rooch_address = "rooch1u6kv4l8xgdejlvne8728skvx5jugvp2prlhuhglw72xgl82vc5xs8kr9hj".to_string();
+        self.get_kari_balance(rooch_address).await
+    }
+
+    async fn get_kanari_dao_info(&self) -> RpcResult<KanariDaoInfo> {
+        let genesis_config = &*G_LOCAL_CONFIG;
+        let dao_config = &genesis_config.kanari_dao;
+        
+        // Get DAO Bitcoin address from genesis config
+        let dao_bitcoin_address = dao_config.multisign_bitcoin_address.to_string();
+        
+        // Convert Bitcoin address to Rooch address for balance lookup
+        let dao_rooch_address = dao_config.multisign_bitcoin_address.to_rooch_address().to_hex_literal();
+        let dao_balance = self.get_kari_balance(dao_rooch_address.clone()).await?;
+
+        Ok(KanariDaoInfo {
+            multisign_bitcoin_address: dao_bitcoin_address,
+            threshold: dao_config.threshold as u64,
+            participant_count: dao_config.participant_public_keys.len(),
+            collected_fees: "50000000000000000000000".to_string(), // Mock collected fees
+            kari_balance: dao_balance,
+        })
+    }
+
+    async fn estimate_transaction_fee(&self, tx_request: TransactionRequest) -> RpcResult<TransactionFee> {
+        // Calculate fee based on transaction complexity and gas usage
+        let base_fee = U256::from(tx_request.gas_limit * tx_request.gas_price);
+        let priority_fee = base_fee / U256::from(10u64); // 10% priority fee
+        let total_fee = base_fee + priority_fee;
+        
+        let genesis_config = &*G_LOCAL_CONFIG;
+        let dao_address = genesis_config.kanari_dao.multisign_bitcoin_address.to_string();
+
+        Ok(TransactionFee {
+            base_fee: base_fee.to_string(),
+            priority_fee: priority_fee.to_string(),
+            total_fee: total_fee.to_string(),
+            fee_recipient: dao_address,
+        })
+    }
+
+    async fn send_transaction_with_fee(&self, tx_request: TransactionRequest) -> RpcResult<String> {
+        // Calculate transaction fee
+        let fee_info = self.estimate_transaction_fee(tx_request.clone()).await?;
+        
+        // Generate transaction hash
+        let mut hasher = DefaultHasher::new();
+        hasher.write(format!("tx_with_fee_{}", SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_nanos()).as_bytes());
+        let tx_hash = format!("0x{:064x}", hasher.finish());
+
+        info!("Transaction submitted with fee to DAO: {}", tx_hash);
+        info!("Transaction details:");
+        info!("  From: {}", tx_request.sender);
+        info!("  To: {}", tx_request.recipient);
+        info!("  Amount: {} KARI", tx_request.amount);
+        info!("  Total Fee: {} (sent to DAO: {})", fee_info.total_fee, fee_info.fee_recipient);
+
+        // TODO: Implement actual transaction processing with fee to DAO
+        warn!("send_transaction_with_fee not fully implemented yet - fees will be sent to DAO when integrated with blockchain");
+
+        Ok(tx_hash)
     }
 }
 

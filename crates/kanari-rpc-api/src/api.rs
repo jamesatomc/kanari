@@ -93,6 +93,36 @@ pub struct TokenBalance {
     pub token_info: KariTokenInfo,
 }
 
+/// Rooch wallet information
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct RoochWalletInfo {
+    pub rooch_address: String,
+    pub hex_address: String,
+    pub bitcoin_address: String,
+    pub public_key: String,
+    pub is_active: bool,
+    pub kari_balance: TokenBalance,
+}
+
+/// Kanari DAO information
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct KanariDaoInfo {
+    pub multisign_bitcoin_address: String,
+    pub threshold: u64,
+    pub participant_count: usize,
+    pub collected_fees: String,
+    pub kari_balance: TokenBalance,
+}
+
+/// Transaction fee information
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct TransactionFee {
+    pub base_fee: String,
+    pub priority_fee: String,
+    pub total_fee: String,
+    pub fee_recipient: String, // Kanari DAO address
+}
+
 /// Transaction request
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TransactionRequest {
@@ -170,6 +200,26 @@ pub trait KanariRpcApi {
     /// Get all token balances for an address
     #[method(name = "getAllTokenBalances")]
     async fn get_all_token_balances(&self, address: String) -> RpcResult<Vec<TokenBalance>>;
+
+    /// Get Rooch wallet information with KARI balance
+    #[method(name = "getRoochWalletInfo")]
+    async fn get_rooch_wallet_info(&self) -> RpcResult<RoochWalletInfo>;
+
+    /// Get KARI balance for the active Rooch wallet
+    #[method(name = "getRoochKariBalance")]
+    async fn get_rooch_kari_balance(&self) -> RpcResult<TokenBalance>;
+
+    /// Get Kanari DAO information
+    #[method(name = "getKanariDaoInfo")]
+    async fn get_kanari_dao_info(&self) -> RpcResult<KanariDaoInfo>;
+
+    /// Get transaction fee estimate
+    #[method(name = "estimateTransactionFee")]
+    async fn estimate_transaction_fee(&self, tx_request: TransactionRequest) -> RpcResult<TransactionFee>;
+
+    /// Send transaction with fee to DAO
+    #[method(name = "sendTransactionWithFee")]
+    async fn send_transaction_with_fee(&self, tx_request: TransactionRequest) -> RpcResult<String>;
 }
 
 /// Admin RPC API trait
